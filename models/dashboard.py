@@ -31,6 +31,17 @@ class DashboardBoard(models.Model):
             'target': 'self',
         }
 
+    def action_open_widgets(self):
+        """Abre a lista de widgets filtrada por este dashboard."""
+        return {
+            'type': 'ir.actions.act_window',
+            'name': f'Widgets — {self.name}',
+            'res_model': 'dashboard.widget',
+            'view_mode': 'list,form',
+            'domain': [('board_id', '=', self.id)],
+            'context': {'default_board_id': self.id},
+        }
+
 
 class DashboardWidget(models.Model):
     _name = 'dashboard.widget'

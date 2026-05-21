@@ -12,8 +12,10 @@
     'depends': ['base', 'web'],
     'data': [
         'security/ir.model.access.csv',
-        'views/dashboard_board_views.xml',
+        # Widgets primeiro (board_views referencia o modelo widget via type="object")
         'views/dashboard_widget_views.xml',
+        'views/dashboard_board_views.xml',
+        # Menus por último (dependem das actions acima)
         'views/menus.xml',
         'templates/index.xml',
     ],

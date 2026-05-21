@@ -13,7 +13,8 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="%(action_dashboard_widget_list)d" type="action"
+                        <!-- type="object" evita dependência de ordem de carregamento -->
+                        <button name="action_open_widgets" type="object"
                                 class="oe_stat_button" icon="fa-bar-chart">
                             <field name="widget_count" widget="statinfo" string="Widgets"/>
                         </button>
@@ -21,7 +22,7 @@
                     <div class="oe_title">
                         <label for="name" string="Nome do Dashboard"/>
                         <h1>
-                            <field name="icon" class="me-2" style="font-size:1.5rem"/>
+                            <field name="icon" class="me-2" style="font-size:1.5rem;"/>
                             <field name="name" placeholder="Ex: Vendas, Financeiro..."/>
                         </h1>
                     </div>
@@ -34,8 +35,8 @@
                     </group>
                     <notebook>
                         <page string="Widgets" name="widgets">
-                            <field name="widget_ids" widget="one2many_list">
-                                <list editable="bottom" decoration-muted="not active">
+                            <field name="widget_ids">
+                                <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="icon"/>
                                     <field name="name"/>
@@ -59,7 +60,7 @@
         <field name="name">dashboard.board.list</field>
         <field name="model">dashboard.board</field>
         <field name="arch" type="xml">
-            <list string="Dashboards" decoration-muted="not active">
+            <list string="Dashboards">
                 <field name="sequence" widget="handle"/>
                 <field name="icon"/>
                 <field name="name"/>
@@ -77,7 +78,7 @@
         <field name="name">dashboard.board.kanban</field>
         <field name="model">dashboard.board</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="active" class="o_kanban_small_column">
+            <kanban>
                 <field name="name"/>
                 <field name="description"/>
                 <field name="icon"/>
@@ -88,12 +89,12 @@
                         <div class="oe_kanban_global_click">
                             <div class="o_kanban_card_header">
                                 <div class="o_kanban_card_header_title">
-                                    <span class="me-2" t-esc="record.icon.value"/>
-                                    <strong t-esc="record.name.value"/>
+                                    <span class="me-2"><t t-esc="record.icon.value"/></span>
+                                    <strong><t t-esc="record.name.value"/></strong>
                                 </div>
                             </div>
                             <div class="o_kanban_card_content">
-                                <p class="text-muted small" t-esc="record.description.value"/>
+                                <p class="text-muted small"><t t-esc="record.description.value"/></p>
                                 <div class="mt-2">
                                     <span class="badge bg-primary">
                                         <t t-esc="record.widget_count.value"/> widgets

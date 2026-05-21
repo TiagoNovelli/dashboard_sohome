@@ -534,7 +534,7 @@ body { display: flex; height: 100vh; }
 }
 
 .widget-table th {
-  background: rgba(255,255,255,0.04);
+  background: var(--table-head-bg, rgba(255,255,255,0.04));
   padding: 8px 12px;
   text-align: left;
   font-weight: 600;
@@ -967,6 +967,276 @@ body { display: flex; height: 100vh; }
   from { opacity: 1; transform: translateX(0); }
   to   { opacity: 0; transform: translateX(20px); }
 }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Stagger de animação dos cards */
+.widget-card:nth-child(1)  { animation-delay: 0.00s; }
+.widget-card:nth-child(2)  { animation-delay: 0.05s; }
+.widget-card:nth-child(3)  { animation-delay: 0.10s; }
+.widget-card:nth-child(4)  { animation-delay: 0.15s; }
+.widget-card:nth-child(5)  { animation-delay: 0.20s; }
+.widget-card:nth-child(6)  { animation-delay: 0.25s; }
+.widget-card:nth-child(7)  { animation-delay: 0.30s; }
+.widget-card:nth-child(8)  { animation-delay: 0.35s; }
+.widget-card:nth-child(n+9){ animation-delay: 0.40s; }
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   THEME TOGGLE BUTTON
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* Dark mode (padrão): mostra sol, esconde lua */
+.btn-theme .icon-moon { display: none; }
+.btn-theme .icon-sun  { display: block; }
+
+/* Light mode: mostra lua, esconde sol */
+html[data-theme="light"] .btn-theme .icon-sun  { display: none; }
+html[data-theme="light"] .btn-theme .icon-moon { display: block; }
+
+/* Ícone do sol pulsa levemente ao fazer hover */
+.btn-theme:hover .icon-sun {
+  animation: sunPulse 0.6s var(--ease);
+}
+.btn-theme:hover .icon-moon {
+  animation: moonRock 0.5s var(--ease);
+}
+
+@keyframes sunPulse {
+  0%   { transform: rotate(0deg) scale(1); }
+  50%  { transform: rotate(20deg) scale(1.15); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+@keyframes moonRock {
+  0%   { transform: rotate(0deg); }
+  40%  { transform: rotate(-15deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   TRANSIÇÕES SUAVES DE TEMA
+   Aplicadas via classe .theme-ready adicionada pelo JS após o primeiro load,
+   evitando flash no carregamento inicial.
+   ══════════════════════════════════════════════════════════════════════════════ */
+.theme-ready,
+.theme-ready .sidebar,
+.theme-ready .main-content,
+.theme-ready .topbar,
+.theme-ready .widget-card,
+.theme-ready .modal,
+.theme-ready .modal-overlay,
+.theme-ready .board-item,
+.theme-ready .btn-icon,
+.theme-ready .btn-ghost,
+.theme-ready .btn-new-board,
+.theme-ready .form-input,
+.theme-ready .form-select,
+.theme-ready .sql-editor-wrap,
+.theme-ready .widget-table th,
+.theme-ready .widget-table td,
+.theme-ready .toast,
+.theme-ready .sidebar-header,
+.theme-ready .sidebar-footer,
+.theme-ready .nav-section-label {
+  transition:
+    background-color 0.25s ease,
+    border-color     0.25s ease,
+    color            0.25s ease,
+    box-shadow       0.25s ease !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   TEMA CLARO
+   ══════════════════════════════════════════════════════════════════════════════ */
+html[data-theme="light"] {
+  /* Backgrounds */
+  --bg-app:       #f0f0f7;
+  --bg-sidebar:   #ffffff;
+  --bg-card:      #ffffff;
+  --bg-card-h:    #f7f7fd;
+  --bg-input:     #f4f4fb;
+  --bg-overlay:   rgba(240, 240, 247, 0.88);
+  --bg-modal:     #ffffff;
+
+  /* Borders */
+  --border:       rgba(0, 0, 0, 0.08);
+  --border-focus: rgba(109, 40, 217, 0.45);
+
+  /* Text */
+  --text-1:  #18182a;
+  --text-2:  #3d3d5c;
+  --text-3:  #8888aa;
+
+  /* Brand */
+  --accent:       #6d28d9;
+  --accent-dim:   rgba(109, 40, 217, 0.08);
+  --accent-glow:  rgba(109, 40, 217, 0.18);
+
+  /* Glow dos color schemes (mais suaves no claro) */
+  --violet-glow: rgba(139, 92, 246, 0.10);
+  --blue-glow:   rgba(59, 130, 246, 0.10);
+  --cyan-glow:   rgba(6, 182, 212, 0.10);
+  --green-glow:  rgba(34, 197, 94, 0.10);
+  --amber-glow:  rgba(245, 158, 11, 0.10);
+  --rose-glow:   rgba(244, 63, 94, 0.10);
+  --slate-glow:  rgba(100, 116, 139, 0.10);
+
+  /* Table */
+  --table-head-bg: rgba(0, 0, 0, 0.035);
+}
+
+/* ── Sidebar no tema claro ────────────────────────────────────────────────── */
+html[data-theme="light"] .sidebar {
+  box-shadow: 1px 0 0 var(--border), 4px 0 20px rgba(0,0,0,0.04);
+}
+
+html[data-theme="light"] .sidebar-toggle:hover,
+html[data-theme="light"] .board-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+html[data-theme="light"] .board-item.active {
+  background: var(--accent-dim);
+}
+
+html[data-theme="light"] .btn-back-odoo:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* ── Cards no tema claro ──────────────────────────────────────────────────── */
+html[data-theme="light"] .widget-card {
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+}
+
+html[data-theme="light"] .widget-card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+html[data-theme="light"] .widget-action-btn {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-3);
+}
+
+html[data-theme="light"] .widget-action-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--text-1);
+}
+
+/* ── Tabela no tema claro ─────────────────────────────────────────────────── */
+html[data-theme="light"] .widget-table-wrap {
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+html[data-theme="light"] .widget-table td {
+  border-bottom-color: rgba(0, 0, 0, 0.04);
+  color: var(--text-2);
+}
+
+html[data-theme="light"] .widget-table tr:hover td {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+/* ── Modal no tema claro ──────────────────────────────────────────────────── */
+html[data-theme="light"] .modal {
+  box-shadow: 0 24px 80px rgba(0,0,0,0.18);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+html[data-theme="light"] .modal-close {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-3);
+}
+
+html[data-theme="light"] .modal-close:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--text-1);
+}
+
+/* ── Formulários no tema claro ────────────────────────────────────────────── */
+html[data-theme="light"] .form-input,
+html[data-theme="light"] .form-select {
+  background: var(--bg-input);
+  border-color: rgba(0, 0, 0, 0.12);
+  color: var(--text-1);
+}
+
+html[data-theme="light"] .form-input:focus,
+html[data-theme="light"] .form-select:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.08);
+}
+
+html[data-theme="light"] .form-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238888aa' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+}
+
+html[data-theme="light"] .form-select option {
+  background: #ffffff;
+  color: var(--text-1);
+}
+
+/* ── Editor SQL: sempre escuro (convenção) ────────────────────────────────── */
+html[data-theme="light"] .sql-editor-wrap {
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+/* ── Botões no tema claro ─────────────────────────────────────────────────── */
+html[data-theme="light"] .btn-icon {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: var(--text-2);
+}
+
+html[data-theme="light"] .btn-icon:hover {
+  background: rgba(0, 0, 0, 0.09);
+  color: var(--text-1);
+}
+
+html[data-theme="light"] .btn-ghost {
+  border-color: rgba(0, 0, 0, 0.14);
+  color: var(--text-2);
+}
+
+html[data-theme="light"] .btn-ghost:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+html[data-theme="light"] .btn-new-board {
+  border-color: rgba(109, 40, 217, 0.25);
+}
+
+/* ── Toast no tema claro ──────────────────────────────────────────────────── */
+html[data-theme="light"] .toast {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* ── Spinner no tema claro ────────────────────────────────────────────────── */
+html[data-theme="light"] .spinner {
+  border-color: rgba(0, 0, 0, 0.08);
+  border-top-color: var(--accent);
+}
+
+/* ── Emoji picker no tema claro ───────────────────────────────────────────── */
+html[data-theme="light"] .emoji-opt {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+html[data-theme="light"] .emoji-opt:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* ── KPI: texto com gradiente — ajusta opacidade no claro ────────────────── */
+html[data-theme="light"] .widget-card[data-color="violet"] .kpi-value { background: linear-gradient(135deg, #6d28d9, #8b5cf6); -webkit-background-clip: text; background-clip: text; }
+html[data-theme="light"] .widget-card[data-color="blue"]   .kpi-value { background: linear-gradient(135deg, #1d4ed8, #3b82f6); -webkit-background-clip: text; background-clip: text; }
+html[data-theme="light"] .widget-card[data-color="cyan"]   .kpi-value { background: linear-gradient(135deg, #0e7490, #06b6d4); -webkit-background-clip: text; background-clip: text; }
+html[data-theme="light"] .widget-card[data-color="green"]  .kpi-value { background: linear-gradient(135deg, #15803d, #22c55e); -webkit-background-clip: text; background-clip: text; }
+html[data-theme="light"] .widget-card[data-color="amber"]  .kpi-value { background: linear-gradient(135deg, #b45309, #f59e0b); -webkit-background-clip: text; background-clip: text; }
+html[data-theme="light"] .widget-card[data-color="rose"]   .kpi-value { background: linear-gradient(135deg, #be123c, #f43f5e); -webkit-background-clip: text; background-clip: text; }
+html[data-theme="light"] .widget-card[data-color="slate"]  .kpi-value { background: linear-gradient(135deg, #334155, #64748b); -webkit-background-clip: text; background-clip: text; }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
