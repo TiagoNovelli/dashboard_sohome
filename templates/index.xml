@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="dashboard_page" name="SoHome Dashboard Page">
+<![CDATA[<!DOCTYPE html>]]>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>SoHome · Dashboards</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"/>
+    <link rel="stylesheet" type="text/css" href="/dashboard_sohome/static/src/css/dashboard.css"/>
+    <script type="text/javascript">
+        window.__SOHOME__ = {
+            csrf_token: "<t t-out="csrf_token"/>",
+            active_board_id: <t t-out="active_board_id or 'null'"/>,
+            user_name: "<t t-out="user_name"/>",
+        };
+    </script>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ══════════════════════════════════════════════════════════════ -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <span class="logo-icon">◈</span>
+            <span class="logo-text">SoHome</span>
+        </div>
+        <button class="sidebar-toggle" id="sidebarToggle" title="Recolher menu">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"/>
+            </svg>
+        </button>
+    </div>
+
+    <nav class="sidebar-nav">
+        <div class="nav-section-label">Dashboards</div>
+        <ul class="board-list" id="boardList">
+            <li class="board-item loading-skeleton">
+                <span class="board-icon">⋯</span>
+                <span class="board-name">Carregando...</span>
+            </li>
+        </ul>
+        <button class="btn-new-board" id="btnNewBoard">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Novo Dashboard
+        </button>
+    </nav>
+
+    <div class="sidebar-footer">
+        <a href="/web" class="btn-back-odoo">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"/>
+            </svg>
+            Voltar ao Odoo
+        </a>
+        <span class="user-badge" id="userBadge">…</span>
+    </div>
+</aside>
+
+<!-- ═══ MAIN ══════════════════════════════════════════════════════════════════ -->
+<main class="main-content" id="mainContent">
+
+    <!-- Top Bar -->
+    <header class="topbar" id="topbar">
+        <div class="topbar-left">
+            <h1 class="board-title" id="boardTitle">Selecione um Dashboard</h1>
+            <span class="board-subtitle" id="boardSubtitle"></span>
+        </div>
+        <div class="topbar-right">
+            <button class="btn-icon" id="btnRefreshAll" title="Atualizar tudo">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 4 23 10 17 10"/>
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+            </button>
+            <button class="btn-primary-sm" id="btnAddWidget">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Widget
+            </button>
+        </div>
+    </header>
+
+    <!-- Widget Grid -->
+    <div class="widget-grid" id="widgetGrid">
+        <div class="empty-state" id="emptyState">
+            <div class="empty-icon">📊</div>
+            <h3>Nenhum widget ainda</h3>
+            <p>Crie seu primeiro widget com uma query SQL</p>
+            <button class="btn-primary-sm" id="btnAddWidgetEmpty">+ Adicionar Widget</button>
+        </div>
+    </div>
+</main>
+
+<!-- ═══ MODAL: Novo Dashboard ════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modalNewBoard">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Novo Dashboard</h2>
+            <button class="modal-close" data-modal="modalNewBoard">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Ícone</label>
+                <div class="emoji-picker-row" id="boardIconPicker">
+                    <span class="emoji-opt selected" data-val="📊">📊</span>
+                    <span class="emoji-opt" data-val="📈">📈</span>
+                    <span class="emoji-opt" data-val="💰">💰</span>
+                    <span class="emoji-opt" data-val="🏠">🏠</span>
+                    <span class="emoji-opt" data-val="🎯">🎯</span>
+                    <span class="emoji-opt" data-val="🚀">🚀</span>
+                    <span class="emoji-opt" data-val="⚡">⚡</span>
+                    <span class="emoji-opt" data-val="🔥">🔥</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="newBoardName">Nome *</label>
+                <input type="text" id="newBoardName" class="form-input" placeholder="Ex: Vendas, Financeiro, Estoque..."/>
+            </div>
+            <div class="form-group">
+                <label for="newBoardDesc">Descrição</label>
+                <input type="text" id="newBoardDesc" class="form-input" placeholder="Opcional"/>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-ghost" data-modal="modalNewBoard">Cancelar</button>
+            <button class="btn-primary" id="btnSaveBoard">Criar Dashboard</button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ MODAL: Widget ════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modalWidget">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <h2 id="modalWidgetTitle">Novo Widget</h2>
+            <button class="modal-close" data-modal="modalWidget">✕</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="widgetId" value=""/>
+
+            <div class="form-row">
+                <div class="form-group form-group-sm">
+                    <label>Ícone</label>
+                    <div class="emoji-picker-row" id="widgetIconPicker">
+                        <span class="emoji-opt selected" data-val="📈">📈</span>
+                        <span class="emoji-opt" data-val="📊">📊</span>
+                        <span class="emoji-opt" data-val="💰">💰</span>
+                        <span class="emoji-opt" data-val="🔢">🔢</span>
+                        <span class="emoji-opt" data-val="👥">👥</span>
+                        <span class="emoji-opt" data-val="📦">📦</span>
+                        <span class="emoji-opt" data-val="⚡">⚡</span>
+                        <span class="emoji-opt" data-val="🎯">🎯</span>
+                    </div>
+                </div>
+                <div class="form-group form-group-grow">
+                    <label for="widgetName">Título *</label>
+                    <input type="text" id="widgetName" class="form-input" placeholder="Ex: Total de Vendas"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="widgetDesc">Subtítulo / Descrição</label>
+                <input type="text" id="widgetDesc" class="form-input" placeholder="Ex: Últimos 30 dias"/>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group form-group-half">
+                    <label for="widgetChartType">Tipo de Gráfico</label>
+                    <select id="widgetChartType" class="form-select">
+                        <option value="number">🔢 KPI / Número</option>
+                        <option value="bar">📊 Barras</option>
+                        <option value="bar_horizontal">📉 Barras Horizontais</option>
+                        <option value="line">📈 Linhas</option>
+                        <option value="area">🏔️ Área</option>
+                        <option value="pie">🥧 Pizza</option>
+                        <option value="donut">🍩 Donut</option>
+                        <option value="table">📋 Tabela</option>
+                    </select>
+                </div>
+                <div class="form-group form-group-half">
+                    <label for="widgetColor">Cor</label>
+                    <select id="widgetColor" class="form-select">
+                        <option value="violet">Violeta</option>
+                        <option value="blue">Azul</option>
+                        <option value="cyan">Ciano</option>
+                        <option value="green">Verde</option>
+                        <option value="amber">Âmbar</option>
+                        <option value="rose">Rosa</option>
+                        <option value="slate">Cinza</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group form-group-half">
+                    <label for="widgetSize">Tamanho</label>
+                    <select id="widgetSize" class="form-select">
+                        <option value="1">1/4 da largura</option>
+                        <option value="2" selected="selected">1/2 da largura</option>
+                        <option value="3">3/4 da largura</option>
+                        <option value="4">Largura total</option>
+                    </select>
+                </div>
+                <div class="form-group form-group-quarter">
+                    <label for="widgetPrefix">Prefixo</label>
+                    <input type="text" id="widgetPrefix" class="form-input" placeholder="R$"/>
+                </div>
+                <div class="form-group form-group-quarter">
+                    <label for="widgetSuffix">Sufixo</label>
+                    <input type="text" id="widgetSuffix" class="form-input" placeholder="%"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="widgetSql">
+                    Query SQL *
+                    <span class="label-hint">Apenas SELECT • Gráficos: col1=label, col2=valor • KPI: 1 linha, 1 valor</span>
+                </label>
+                <div class="sql-editor-wrap">
+                    <textarea id="widgetSql" class="sql-editor" rows="8"
+                              placeholder="SELECT&#10;  TO_CHAR(date_order, 'Mon/YY') AS mes,&#10;  SUM(amount_total) AS total&#10;FROM sale_order&#10;WHERE state = 'sale'&#10;GROUP BY mes&#10;ORDER BY date_order"/>
+                </div>
+                <div class="sql-actions">
+                    <button class="btn-run-sql" id="btnTestSql">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                        Executar
+                    </button>
+                    <span class="sql-result-msg" id="sqlResultMsg"></span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-ghost" data-modal="modalWidget">Cancelar</button>
+            <button class="btn-primary" id="btnSaveWidget">Salvar Widget</button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ TOAST ════════════════════════════════════════════════════════════════ -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script type="text/javascript" src="/dashboard_sohome/static/src/js/dashboard.js"/>
+</body>
+</html>
+</template>
+</odoo>

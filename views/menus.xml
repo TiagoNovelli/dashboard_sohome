@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ─── Menu Raiz ─────────────────────────────────────────────────────── -->
+    <menuitem id="menu_dashboard_root"
+              name="Dashboards"
+              sequence="5"
+              web_icon="dashboard_sohome,static/description/icon.png"/>
+
+    <!-- ─── Menu Dashboards ───────────────────────────────────────────────── -->
+    <menuitem id="menu_dashboard_boards"
+              name="Meus Dashboards"
+              parent="menu_dashboard_root"
+              action="action_dashboard_board"
+              sequence="10"/>
+
+    <!-- ─── Menu Widgets ──────────────────────────────────────────────────── -->
+    <menuitem id="menu_dashboard_widgets"
+              name="Widgets"
+              parent="menu_dashboard_root"
+              action="action_dashboard_widget_list"
+              sequence="20"/>
+
+</odoo>

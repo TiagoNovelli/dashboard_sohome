@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ─── WIDGET: Form View ─────────────────────────────────────────────── -->
+    <record id="view_dashboard_widget_form" model="ir.ui.view">
+        <field name="name">dashboard.widget.form</field>
+        <field name="model">dashboard.widget</field>
+        <field name="arch" type="xml">
+            <form string="Widget">
+                <header>
+                    <button name="action_test_query" type="object"
+                            string="🧪 Testar Query" class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Título do Widget"/>
+                        <h1>
+                            <field name="icon" class="me-2" style="font-size:1.5rem"/>
+                            <field name="name" placeholder="Ex: Total de Vendas..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Configuração">
+                            <field name="board_id"/>
+                            <field name="description"/>
+                            <field name="chart_type"/>
+                            <field name="color_scheme"/>
+                        </group>
+                        <group string="Aparência">
+                            <field name="size"/>
+                            <field name="prefix" placeholder="Ex: R$"/>
+                            <field name="suffix" placeholder="Ex: %"/>
+                            <field name="refresh_interval"/>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Query SQL" name="sql">
+                            <div class="alert alert-info">
+                                <strong>💡 Dica:</strong>
+                                Apenas <code>SELECT</code> é permitido.
+                                Para <b>gráficos</b>: retorne 2 colunas (label, valor).
+                                Para <b>KPI</b>: retorne 1 linha com 1 valor.
+                                Para <b>tabela</b>: retorne quantas colunas quiser.
+                            </div>
+                            <field name="sql_query" widget="ace"
+                                   options="{'mode': 'sql', 'theme': 'monokai'}"
+                                   placeholder="SELECT categoria, COUNT(*) as total FROM sale_order GROUP BY categoria ORDER BY total DESC"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ─── WIDGET: List View ─────────────────────────────────────────────── -->
+    <record id="view_dashboard_widget_list" model="ir.ui.view">
+        <field name="name">dashboard.widget.list</field>
+        <field name="model">dashboard.widget</field>
+        <field name="arch" type="xml">
+            <list string="Widgets" editable="top">
+                <field name="sequence" widget="handle"/>
+                <field name="icon"/>
+                <field name="name"/>
+                <field name="board_id"/>
+                <field name="chart_type"/>
+                <field name="color_scheme"/>
+                <field name="size"/>
+                <field name="description"/>
+                <button name="action_test_query" type="object"
+                        string="🧪 Testar" class="btn-sm btn-secondary"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ─── WIDGET: Action ────────────────────────────────────────────────── -->
+    <record id="action_dashboard_widget_list" model="ir.actions.act_window">
+        <field name="name">Widgets</field>
+        <field name="res_model">dashboard.widget</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Adicione o primeiro Widget!
+            </p>
+            <p>Crie widgets com queries SQL para visualizar dados em gráficos.</p>
+        </field>
+    </record>
+
+</odoo>

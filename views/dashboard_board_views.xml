@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ─── BOARD: Form View ─────────────────────────────────────────────── -->
+    <record id="view_dashboard_board_form" model="ir.ui.view">
+        <field name="name">dashboard.board.form</field>
+        <field name="model">dashboard.board</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard">
+                <header>
+                    <button name="action_view_dashboard" type="object"
+                            string="🚀 Abrir Dashboard" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_dashboard_widget_list)d" type="action"
+                                class="oe_stat_button" icon="fa-bar-chart">
+                            <field name="widget_count" widget="statinfo" string="Widgets"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Nome do Dashboard"/>
+                        <h1>
+                            <field name="icon" class="me-2" style="font-size:1.5rem"/>
+                            <field name="name" placeholder="Ex: Vendas, Financeiro..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="description"/>
+                            <field name="sequence"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Widgets" name="widgets">
+                            <field name="widget_ids" widget="one2many_list">
+                                <list editable="bottom" decoration-muted="not active">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="icon"/>
+                                    <field name="name"/>
+                                    <field name="chart_type"/>
+                                    <field name="color_scheme"/>
+                                    <field name="size"/>
+                                    <field name="description"/>
+                                    <button name="action_test_query" type="object"
+                                            string="🧪 Testar" class="btn-sm btn-secondary"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ─── BOARD: List View ─────────────────────────────────────────────── -->
+    <record id="view_dashboard_board_list" model="ir.ui.view">
+        <field name="name">dashboard.board.list</field>
+        <field name="model">dashboard.board</field>
+        <field name="arch" type="xml">
+            <list string="Dashboards" decoration-muted="not active">
+                <field name="sequence" widget="handle"/>
+                <field name="icon"/>
+                <field name="name"/>
+                <field name="description"/>
+                <field name="widget_count" string="Widgets"/>
+                <field name="active" widget="boolean_toggle"/>
+                <button name="action_view_dashboard" type="object"
+                        string="🚀 Abrir" class="btn-sm btn-primary"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ─── BOARD: Kanban View ────────────────────────────────────────────── -->
+    <record id="view_dashboard_board_kanban" model="ir.ui.view">
+        <field name="name">dashboard.board.kanban</field>
+        <field name="model">dashboard.board</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="active" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="description"/>
+                <field name="icon"/>
+                <field name="widget_count"/>
+                <field name="active"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <span class="me-2" t-esc="record.icon.value"/>
+                                    <strong t-esc="record.name.value"/>
+                                </div>
+                            </div>
+                            <div class="o_kanban_card_content">
+                                <p class="text-muted small" t-esc="record.description.value"/>
+                                <div class="mt-2">
+                                    <span class="badge bg-primary">
+                                        <t t-esc="record.widget_count.value"/> widgets
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="o_kanban_card_footer">
+                                <button name="action_view_dashboard" type="object"
+                                        class="btn btn-sm btn-primary w-100">
+                                    🚀 Abrir Dashboard
+                                </button>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ─── BOARD: Action ────────────────────────────────────────────────── -->
+    <record id="action_dashboard_board" model="ir.actions.act_window">
+        <field name="name">Dashboards</field>
+        <field name="res_model">dashboard.board</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crie seu primeiro Dashboard!
+            </p>
+            <p>Configure dashboards com gráficos e KPIs baseados em queries SQL.</p>
+        </field>
+    </record>
+
+</odoo>
