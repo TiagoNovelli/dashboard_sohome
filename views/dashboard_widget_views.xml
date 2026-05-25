@@ -36,7 +36,7 @@
                     </group>
                     <notebook>
                         <page string="Query SQL" name="sql">
-                            <div class="alert alert-info">
+                            <div class="alert alert-info" role="status">
                                 <strong>💡 Dica:</strong>
                                 Apenas <code>SELECT</code> é permitido.
                                 Para <b>gráficos</b>: retorne 2 colunas (label, valor).
