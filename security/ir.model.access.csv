@@ -1,5 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_dashboard_board_user,dashboard.board.user,model_dashboard_board,base.group_user,1,1,1,1
-access_dashboard_widget_user,dashboard.widget.user,model_dashboard_widget,base.group_user,1,1,1,1
-access_dashboard_board_manager,dashboard.board.manager,model_dashboard_board,base.group_system,1,1,1,1
-access_dashboard_widget_manager,dashboard.widget.manager,model_dashboard_widget,base.group_system,1,1,1,1
+access_dashboard_board_viewer,dashboard.board.viewer,model_dashboard_board,dashboard_sohome.group_dashboard_viewer,1,0,0,0
+access_dashboard_board_editor,dashboard.board.editor,model_dashboard_board,dashboard_sohome.group_dashboard_editor,1,1,1,1
+access_dashboard_widget_viewer,dashboard.widget.viewer,model_dashboard_widget,dashboard_sohome.group_dashboard_viewer,1,0,0,0
+access_dashboard_widget_editor,dashboard.widget.editor,model_dashboard_widget,dashboard_sohome.group_dashboard_editor,1,1,1,1
+access_dashboard_filter_viewer,dashboard.filter.viewer,model_dashboard_filter,dashboard_sohome.group_dashboard_viewer,1,0,0,0
+access_dashboard_filter_editor,dashboard.filter.editor,model_dashboard_filter,dashboard_sohome.group_dashboard_editor,1,1,1,1

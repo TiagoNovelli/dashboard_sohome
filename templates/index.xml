@@ -16,9 +16,10 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"><!-- chartjs --></script>
     <script type="text/javascript">
         window.__SOHOME__ = {
-            csrf_token: "<t t-out="csrf_token"/>",
+            csrf_token:     "<t t-out="csrf_token"/>",
             active_board_id: <t t-if="active_board_id"><t t-out="active_board_id"/></t><t t-else="">null</t>,
-            user_name: "<t t-out="user_name"/>",
+            user_name:      "<t t-out="user_name"/>",
+            can_edit:       <t t-if="can_edit">true</t><t t-else="">false</t>,
         };
     </script>
 </head>
@@ -46,13 +47,15 @@
                 <span class="board-name">Carregando...</span>
             </li>
         </ul>
-        <button class="btn-new-board" id="btnNewBoard">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <line x1="12" y1="5" x2="12" y2="19"/>
-                <line x1="5" y1="12" x2="19" y2="12"/>
-            </svg>
-            Novo Dashboard
-        </button>
+        <t t-if="can_edit">
+            <button class="btn-new-board" id="btnNewBoard">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Novo Dashboard
+            </button>
+        </t>
     </nav>
 
     <div class="sidebar-footer">
@@ -82,9 +85,7 @@
                     <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
                 </svg>
             </button>
-            <!-- Botão tema claro/escuro -->
             <button class="btn-icon btn-theme" id="btnThemeToggle" title="Mudar para tema claro">
-                <!-- Sol: visível no tema escuro (para trocar para claro) -->
                 <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="5"/>
                     <line x1="12" y1="1" x2="12" y2="3"/>
@@ -96,20 +97,24 @@
                     <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
                     <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
                 </svg>
-                <!-- Lua: visível no tema claro (para trocar para escuro) -->
                 <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                 </svg>
             </button>
-            <button class="btn-primary-sm" id="btnAddWidget">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <line x1="12" y1="5" x2="12" y2="19"/>
-                    <line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
-                Widget
-            </button>
+            <t t-if="can_edit">
+                <button class="btn-primary-sm" id="btnAddWidget">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Widget
+                </button>
+            </t>
         </div>
     </header>
+
+    <!-- Barra de Filtros (preenchida pelo JS) -->
+    <div id="filterBar"></div>
 
     <!-- Widget Grid -->
     <div class="widget-grid" id="widgetGrid">
@@ -117,7 +122,9 @@
             <div class="empty-icon">📊</div>
             <h3>Nenhum widget ainda</h3>
             <p>Crie seu primeiro widget com uma query SQL</p>
-            <button class="btn-primary-sm" id="btnAddWidgetEmpty">+ Adicionar Widget</button>
+            <t t-if="can_edit">
+                <button class="btn-primary-sm" id="btnAddWidgetEmpty">+ Adicionar Widget</button>
+            </t>
         </div>
     </div>
 </main>
@@ -242,10 +249,29 @@
                 </div>
             </div>
 
+            <!-- Campos de link Odoo — visíveis apenas quando chart_type = number -->
+            <div id="odooLinkWrap">
+                <div class="form-row">
+                    <div class="form-group form-group-half">
+                        <label for="widgetOdooModel">
+                            Modelo Odoo
+                            <span class="label-hint">— clique no KPI abre no Odoo</span>
+                        </label>
+                        <input type="text" id="widgetOdooModel" class="form-input"
+                               placeholder="Ex: sale.order, product.template"/>
+                    </div>
+                    <div class="form-group form-group-half">
+                        <label for="widgetOdooDomain">Domain (filtro)</label>
+                        <input type="text" id="widgetOdooDomain" class="form-input"
+                               placeholder='[["state","in",["draft","sent"]]]'/>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="widgetSql">
                     Query SQL *
-                    <span class="label-hint">— Apenas SELECT • Gráficos: col1=label, col2=valor • KPI: 1 linha, 1 valor</span>
+                    <span class="label-hint">— Apenas SELECT · Gráficos: col1=label, col2=valor · KPI: 1 linha, 1 valor · Vars: {{uid}}, {{chave_filtro}}</span>
                 </label>
                 <div class="sql-editor-wrap">
                     <textarea id="widgetSql" class="sql-editor" rows="8"

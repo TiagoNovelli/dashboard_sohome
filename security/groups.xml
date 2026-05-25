@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Visualizador: acesso somente-leitura ao módulo -->
+    <record id="group_dashboard_viewer" model="res.groups">
+        <field name="name">Visualizador</field>
+        <field name="category_id" ref="base.module_category_reporting"/>
+        <field name="comment">Pode visualizar dashboards e seus dados. Não pode criar, editar ou excluir.</field>
+    </record>
+
+    <!-- Editor: acesso completo (implica Visualizador) -->
+    <record id="group_dashboard_editor" model="res.groups">
+        <field name="name">Editor</field>
+        <field name="category_id" ref="base.module_category_reporting"/>
+        <field name="implied_ids" eval="[(4, ref('group_dashboard_viewer'))]"/>
+        <field name="comment">Pode criar, editar e excluir dashboards, widgets e filtros.</field>
+    </record>
+</odoo>

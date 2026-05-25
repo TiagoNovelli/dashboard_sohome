@@ -13,7 +13,6 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <!-- type="object" evita dependência de ordem de carregamento -->
                         <button name="action_open_widgets" type="object"
                                 class="oe_stat_button" icon="fa-bar-chart">
                             <field name="widget_count" widget="statinfo" string="Widgets"/>
@@ -46,6 +45,24 @@
                                     <field name="description"/>
                                     <button name="action_test_query" type="object"
                                             string="🧪 Testar" class="btn-sm btn-secondary"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Filtros" name="filters">
+                            <div class="alert alert-info" role="status">
+                                <strong>🔍 Como usar filtros:</strong>
+                                Adicione filtros aqui e use <code>{{chave}}</code> nas queries SQL dos widgets.
+                                Ex: um filtro com chave <code>date_from</code> permite escrever
+                                <code>WHERE date_order &gt;= {{date_from}}</code> na query.
+                                O usuário verá uma barra de filtros no topo do dashboard.
+                            </div>
+                            <field name="filter_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name" placeholder="Ex: Data Inicial"/>
+                                    <field name="param_key" placeholder="Ex: date_from"/>
+                                    <field name="filter_type"/>
+                                    <field name="default_value" placeholder="Ex: 2024-01-01"/>
                                 </list>
                             </field>
                         </page>

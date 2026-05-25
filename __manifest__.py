@@ -1,6 +1,6 @@
 {
     'name': 'SoHome Dashboards',
-    'version': '18.0.1.0.0',
+    'version': '18.0.1.1.0',
     'category': 'Reporting',
     'summary': 'Dashboards personalizados com SQL',
     'description': """
@@ -11,6 +11,8 @@
     'author': 'SoHome',
     'depends': ['base', 'web'],
     'data': [
+        # Grupos de segurança primeiro (referenciados pelo access.csv)
+        'security/groups.xml',
         'security/ir.model.access.csv',
         # Widgets primeiro (board_views referencia o modelo widget via type="object")
         'views/dashboard_widget_views.xml',

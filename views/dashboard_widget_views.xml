@@ -42,10 +42,30 @@
                                 Para <b>gráficos</b>: retorne 2 colunas (label, valor).
                                 Para <b>KPI</b>: retorne 1 linha com 1 valor.
                                 Para <b>tabela</b>: retorne quantas colunas quiser.
+                                <br/>
+                                <b>Variáveis disponíveis:</b>
+                                <code>{{uid}}</code> (ID do usuário logado),
+                                <code>{{user_name}}</code> (nome do usuário),
+                                e os filtros definidos no dashboard: <code>{{chave}}</code>.
                             </div>
                             <field name="sql_query" widget="ace"
                                    options="{'mode': 'sql', 'theme': 'monokai'}"
                                    placeholder="SELECT categoria, COUNT(*) as total FROM sale_order GROUP BY categoria ORDER BY total DESC"/>
+                        </page>
+                        <page string="Link Odoo (KPI)" name="odoo_link"
+                              attrs="{'invisible': [('chart_type', '!=', 'number')]}">
+                            <div class="alert alert-info" role="status">
+                                <strong>🔗 Link para o Odoo:</strong>
+                                Quando preenchido, o valor do KPI vira um link que abre a list view do
+                                modelo Odoo já filtrada pelo domain informado.
+                                Isso permite que o usuário clique no número e veja os registros correspondentes.
+                            </div>
+                            <group>
+                                <field name="odoo_model"
+                                       placeholder="Ex: sale.order, product.template, account.move"/>
+                                <field name="odoo_domain"
+                                       placeholder='Ex: [["state","in",["draft","sent"]]]'/>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>
