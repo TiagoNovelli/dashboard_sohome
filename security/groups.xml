@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Categoria própria: aparece como seção "SoHome Dashboards" no formulário de usuário -->
+    <record id="module_category_dashboard_sohome" model="ir.module.category">
+        <field name="name">SoHome Dashboards</field>
+        <field name="sequence">100</field>
+    </record>
+
     <!-- Visualizador: acesso somente-leitura ao módulo -->
     <record id="group_dashboard_viewer" model="res.groups">
         <field name="name">Visualizador</field>
-        <field name="category_id" ref="base.module_category_reporting"/>
+        <field name="category_id" ref="module_category_dashboard_sohome"/>
         <field name="comment">Pode visualizar dashboards e seus dados. Não pode criar, editar ou excluir.</field>
     </record>
 
     <!-- Editor: acesso completo (implica Visualizador) -->
     <record id="group_dashboard_editor" model="res.groups">
         <field name="name">Editor</field>
-        <field name="category_id" ref="base.module_category_reporting"/>
+        <field name="category_id" ref="module_category_dashboard_sohome"/>
         <field name="implied_ids" eval="[(4, ref('group_dashboard_viewer'))]"/>
         <field name="comment">Pode criar, editar e excluir dashboards, widgets e filtros.</field>
     </record>
