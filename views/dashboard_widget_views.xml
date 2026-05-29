@@ -53,7 +53,7 @@
                                    placeholder="SELECT categoria, COUNT(*) as total FROM sale_order GROUP BY categoria ORDER BY total DESC"/>
                         </page>
                         <page string="Link Odoo (KPI)" name="odoo_link"
-                              attrs="{'invisible': [('chart_type', '!=', 'number')]}">
+                              invisible="chart_type != 'number'">
                             <div class="alert alert-info" role="status">
                                 <strong>🔗 Link para o Odoo:</strong>
                                 Quando preenchido, o valor do KPI vira um link que abre a list view do
